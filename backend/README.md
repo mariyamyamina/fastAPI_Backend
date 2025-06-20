@@ -20,9 +20,8 @@ Users can create, edit, delete, and view blog posts.
 
 ## Run the Backend
 ```bash
-cd backend
 pip install fastapi uvicorn
-uvicorn main:app --reload
+python -m uvicorn backend.app.main:app --reload
 ```
 ## Run the Frontend
 ```bash

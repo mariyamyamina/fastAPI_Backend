@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException
 from bson import ObjectId
 
-from app.schemas.blogs import Blog  
-from app.core.database import collection
-from app.utils.helpers import blog_helper
+from ..schemas.blogs import Blog  
+from ..core.database import collection
+from ..utils.helpers import blog_helper
 
 router = APIRouter()
 
@@ -33,12 +33,14 @@ async def get_blog(blog_id: str):
 # UPDATE
 @router.put("/{blog_id}")
 async def update_blog(blog_id: str, updated_blog: Blog):
-    result = await collection.update_one(
+    existing_blog = await collection.find_one({"_id": ObjectId(blog_id)})
+    if not existing_blog:
+        raise HTTPException(status_code=404, detail="Blog not found")
+
+    await collection.update_one(
         {"_id": ObjectId(blog_id)}, {"$set": updated_blog.dict()}
     )
-    if result.modified_count:
-        return await get_blog(blog_id)
-    raise HTTPException(status_code=404, detail="Blog not found or no changes")
+    return await get_blog(blog_id)
 
 # DELETE
 @router.delete("/{blog_id}")

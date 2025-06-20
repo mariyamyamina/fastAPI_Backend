@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import blogs
+from .routers import blogs
 from dotenv import load_dotenv
 
 load_dotenv()
